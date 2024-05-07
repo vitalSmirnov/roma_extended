@@ -1,13 +1,11 @@
 import { useParams } from 'react-router-dom'
 import { Card, Container, Spinner } from 'react-bootstrap'
-import { Books } from '../../../app/mocks/BookMock.ts'
+import { useGetBookQuery } from '../../../app/api/Books/bookApiQuerry.ts'
 
 export const BookDetailed = () => {
   const { id } = useParams()
-  // const { data, isLoading } = useGetBookQuery({ bookId: id! })
+  const { data, isLoading } = useGetBookQuery({ id: id! })
   // Как будет сервер - раскомментировать строку выше и убрать две строки ниже, всё должно подхватиться само
-  const data = Books.find(item => item.id === id)
-  const isLoading = false
 
   document.title = `${data!.title}`
 

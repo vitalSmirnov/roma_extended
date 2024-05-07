@@ -1,16 +1,34 @@
 import { Modal, Button, Form } from 'react-bootstrap'
 import { FormEvent, useState } from 'react'
 import { MultiplySelect } from '../MultiplySelect'
+import { useCreateBookMutation } from '../../app/api/Books/bookApiQuerry.ts'
+import { CreateBookPayload } from '../../app/api/Books/bookApiDataSource.ts'
 
 export const CreateBookModal = () => {
-  // const [createBook] = useCreateBookMutation()
-  const [show, setShow] = useState(false)
-  const [collections, setCollection] = useState<string[]>([])
+  const [createBook] = useCreateBookMutation()
 
-  const [inputField, setInputField] = useState<Record<string, any>>({
+  const [show, setShow] = useState(false)
+  const [collectionsId, setCollection] = useState<string[]>([])
+
+  const [inputField, setInputField] = useState<Omit<CreateBookPayload, 'collectionsId'>>({
     title: '',
     inventoryNumber: '',
     description: '',
+    partsQuantity: '',
+    publicationPlace: '',
+    publishingHouse: '',
+    publishingYear: 0,
+    language: '',
+    subjects: '',
+    publicationType: '',
+    autograph: '',
+    note: '',
+    bookplate: '',
+    stamp: '',
+    label: '',
+    binding: '',
+    authorsId: [],
+    bcode: 0,
   })
   const payloadHandler = (e: FormEvent<HTMLFormElement>) => {
     // @ts-ignore
@@ -20,11 +38,12 @@ export const CreateBookModal = () => {
   const setCollectionPayload = (values: string[]) => {
     setCollection(values)
   }
+
   // функция ниже запускается когда на странице происходит submit event
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault() // предотвращает предустановленный эффект от эвента в данном случае спасает от вызова Post запроса и перезагрузки страницы
     e.stopPropagation() // аналогично выше
-    console.log({ ...inputField, collections: collections }, 'final')
+    createBook({ ...inputField, collectionsId: collectionsId })
   }
 
   const handleClose = () => setShow(false)
@@ -98,10 +117,7 @@ export const CreateBookModal = () => {
                 type='text'
               />
             </Form.Group>
-            <MultiplySelect
-              value={collections}
-              selectionCallback={setCollectionPayload}
-            />
+            <MultiplySelect selectionCallback={setCollectionPayload} />
             <Button
               // инициатор submit event
               type={'submit'}

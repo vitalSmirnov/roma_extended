@@ -1,13 +1,14 @@
 import { Form } from 'react-bootstrap'
-import { collections } from '../../app/mocks/CollectionMock.ts'
+import { useGetCollectionListQuery } from '../../app/api/Collection/CollectionApiQuerry.ts'
 
 interface MultiplySelectProps {
   selectionCallback: (values: string[]) => void
-  value: string[]
 }
 
-export const MultiplySelect = ({ selectionCallback, value }: MultiplySelectProps) => {
-  const onChangeItem = (e: any) => {
+export const MultiplySelect = ({ selectionCallback }: MultiplySelectProps) => {
+  const { data } = useGetCollectionListQuery({})
+
+  const onChangeItem = (e: string[]) => {
     selectionCallback(e)
   }
   return (
@@ -17,10 +18,10 @@ export const MultiplySelect = ({ selectionCallback, value }: MultiplySelectProps
         name={'collections'}
         as='select'
         multiple
-        value={value}
+        value={data!.collections[0].name}
         onChange={e => onChangeItem([].slice.call(e.target.selectedOptions).map(item => item.value))}
       >
-        {collections.map(item => {
+        {data!.collections.map(item => {
           return <option value={item.id}>{item.name}</option>
         })}
       </Form.Control>
