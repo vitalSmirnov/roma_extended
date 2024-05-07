@@ -1,12 +1,15 @@
 import { IBook } from '../../../entities/types/IBook.ts'
 
-export interface GetBookListPayload {}
+export interface GetBookListPayload {
+  page: number
+  limit: number
+}
 export interface GetBookListResponse {
   content: IBook[]
 }
 
 export interface GetBookPayload {
-  bookId: string
+  id: string
 }
 export type GetBookResponse = IBook
 
@@ -33,3 +36,14 @@ export interface CreateBookPayload {
 }
 
 export type CreateBookResponse = IBook
+
+export interface EditBookPayload {
+  id: string
+  body: CreateBookPayload
+}
+export type EditBookResponse = IBook
+
+export interface DeleteBookPayload {
+  id: string
+}
+export interface DeleteBookResponse {}
