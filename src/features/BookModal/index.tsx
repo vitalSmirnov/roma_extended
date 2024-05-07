@@ -3,14 +3,18 @@ import { FormEvent, useState } from 'react'
 import { MultiplySelect } from '../MultiplySelect'
 import { useCreateBookMutation } from '../../app/api/Books/bookApiQuerry.ts'
 import { CreateBookPayload } from '../../app/api/Books/bookApiDataSource.ts'
+import { useGetListAuthorsQuery } from '../../app/api/Author/authorApiQuerry.ts'
+import { useGetCollectionListQuery } from '../../app/api/Collection/CollectionApiQuerry.ts'
 
 export const CreateBookModal = () => {
   const [createBook] = useCreateBookMutation()
+  const authorsData = useGetListAuthorsQuery({ page: 1, limit: 100 })
+  const collectionsData = useGetCollectionListQuery({ page: 1, limit: 100 })
 
   const [show, setShow] = useState(false)
-  const [collectionsId, setCollection] = useState<string[]>([])
 
-  const [inputField, setInputField] = useState<Omit<CreateBookPayload, 'collectionsId'>>({
+  const [inputField, setInputField] = useState<CreateBookPayload>({
+    collectionsId: [],
     title: '',
     inventoryNumber: '',
     description: '',
@@ -30,20 +34,19 @@ export const CreateBookModal = () => {
     authorsId: [],
     bcode: 0,
   })
+
   const payloadHandler = (e: FormEvent<HTMLFormElement>) => {
     // @ts-ignore
     setInputField({ ...inputField, [e.target.name]: e.target.value })
-  }
-
-  const setCollectionPayload = (values: string[]) => {
-    setCollection(values)
   }
 
   // функция ниже запускается когда на странице происходит submit event
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault() // предотвращает предустановленный эффект от эвента в данном случае спасает от вызова Post запроса и перезагрузки страницы
     e.stopPropagation() // аналогично выше
-    createBook({ ...inputField, collectionsId: collectionsId })
+    createBook({ ...inputField }).then(() => {
+      handleClose()
+    })
   }
 
   const handleClose = () => setShow(false)
@@ -85,6 +88,18 @@ export const CreateBookModal = () => {
             </Form.Group>
             <Form.Group
               className='mb-3'
+              controlId='createBookForm.bCode'
+            >
+              <Form.Label>Код</Form.Label>
+              <Form.Control
+                required
+                name={'bcode'}
+                type='number'
+                placeholder='0'
+              />
+            </Form.Group>
+            <Form.Group
+              className='mb-3'
               controlId='createBookForm.title'
             >
               <Form.Label>Заголовок</Form.Label>
@@ -106,18 +121,17 @@ export const CreateBookModal = () => {
                 type='text'
               />
             </Form.Group>
-            <Form.Group
-              className='mb-3'
-              controlId='createBookForm.author'
-            >
-              <Form.Label>Автор</Form.Label>
-              <Form.Control
-                required
-                name={'author'}
-                type='text'
-              />
-            </Form.Group>
-            <MultiplySelect selectionCallback={setCollectionPayload} />
+            <MultiplySelect
+              data={collectionsData.data!}
+              label={'Коллекции'}
+              name={'collectionsId'}
+            />
+            <MultiplySelect
+              //@ts-ignore
+              data={authorsData.data!}
+              label={'Автор'}
+              name={'authorsId'}
+            />
             <Button
               // инициатор submit event
               type={'submit'}

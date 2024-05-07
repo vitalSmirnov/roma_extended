@@ -1,4 +1,4 @@
-import { IAuthor, IAuthored } from '../../../entities/types/IAuthor.ts'
+import { IAuthor } from '../../../entities/types/IAuthor.ts'
 
 export interface GetAuthorPayload {
   id: string
@@ -17,9 +17,8 @@ export interface DeleteAuthorPayload {
 export interface DeleteAuthorResponse {}
 
 export interface GetListAuthorPayload {}
+type IAuthored = IAuthor[]
 export interface GetListAuthorResponse extends IAuthored {}
 
-export interface CreateAuthorPayload {
-  body: Pick<IAuthor, 'lastName' | 'firstName'>
-}
+export interface CreateAuthorPayload extends Pick<IAuthor, 'lastName' | 'firstName'> {}
 export interface CreateAuthorResponse extends IAuthor {}

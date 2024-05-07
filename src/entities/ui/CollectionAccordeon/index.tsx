@@ -1,27 +1,35 @@
-import { Accordion } from 'react-bootstrap'
-import { ICollection } from '../../types/ICollection.ts'
+import { Accordion, Spinner } from 'react-bootstrap'
 import { CollectionBookInner } from './CollectionBookItem'
+import { useGetCollectionListQuery } from '../../../app/api/Collection/CollectionApiQuerry.ts'
 
-interface CollectionAccordeonProps {
-  collections: ICollection[]
-}
+export const CollectionAccordion = () => {
+  const { data, isLoading } = useGetCollectionListQuery({ page: 1, limit: 100 })
 
-export const CollectionAccordion = ({ collections }: CollectionAccordeonProps) => {
   return (
-    <Accordion>
-      {collections.map(collection => {
-        return (
-          <Accordion.Item
-            eventKey={collection.id}
-            key={collection.id}
-          >
-            <Accordion.Header>{collection.name}</Accordion.Header>
-            <Accordion.Body>
-              <CollectionBookInner id={collection.id} />
-            </Accordion.Body>
-          </Accordion.Item>
-        )
-      })}
-    </Accordion>
+    <>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Accordion>
+          {data! ? (
+            data!.map(collection => {
+              return (
+                <Accordion.Item
+                  eventKey={collection.id}
+                  key={collection.id}
+                >
+                  <Accordion.Header>{collection.name}</Accordion.Header>
+                  <Accordion.Body>
+                    <CollectionBookInner id={collection.id} />
+                  </Accordion.Body>
+                </Accordion.Item>
+              )
+            })
+          ) : (
+            <span>{'Ничего'}</span>
+          )}
+        </Accordion>
+      )}
+    </>
   )
 }

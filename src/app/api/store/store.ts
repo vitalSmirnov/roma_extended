@@ -10,7 +10,8 @@ export const store = configureStore({
     [collectionApi.reducerPath]: collectionApi.reducer,
     [authorApi.reducerPath]: authorApi.reducer,
   },
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(bookListApi.middleware, collectionApi.middleware),
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(bookListApi.middleware, collectionApi.middleware, authorApi.middleware),
 })
 
 setupListeners(store.dispatch)

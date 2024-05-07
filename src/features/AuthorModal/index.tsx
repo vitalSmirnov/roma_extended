@@ -1,23 +1,24 @@
 import { Modal, Button, Form } from 'react-bootstrap'
 import { FormEvent, useState } from 'react'
-import { CreateCollectionPayload } from '../../app/api/Collection/collectionApiDataSource.ts'
-import { useCreateCollectionMutation } from '../../app/api/Collection/CollectionApiQuerry.ts'
+import { useCreateAuthorMutation } from '../../app/api/Author/authorApiQuerry.ts'
+import { CreateAuthorPayload } from '../../app/api/Author/authorApiDataSource.ts'
 
-export const CreateCollectionModal = () => {
-  const [createCollection] = useCreateCollectionMutation()
+export const AuthorModal = () => {
+  const [createAuthor] = useCreateAuthorMutation()
   const [show, setShow] = useState(false)
-  const [inputFields, setInputFields] = useState<CreateCollectionPayload>({ name: '' })
+  const [inputFields, setInputFields] = useState<CreateAuthorPayload>({ firstName: '', lastName: '' })
+
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   const payloadHandler = (e: FormEvent<HTMLFormElement>) => {
     // @ts-ignore
-    setInputFields({ [e.target.name]: e.target.value })
+    setInputFields({ ...inputFields, [e.target.name]: e.target.value })
   }
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
-    createCollection(inputFields).then(() => {
+    createAuthor({ ...inputFields }).then(() => {
       handleClose()
     })
   }
@@ -28,7 +29,7 @@ export const CreateCollectionModal = () => {
         variant={'primary'}
         onClick={handleShow}
       >
-        Создать коллекцию
+        Добавить автора
       </Button>
 
       <Modal
@@ -36,7 +37,7 @@ export const CreateCollectionModal = () => {
         onHide={handleClose}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Создать коллекцию</Modal.Title>
+          <Modal.Title>Добавить автора</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -48,9 +49,19 @@ export const CreateCollectionModal = () => {
               className='mb-3'
               controlId='exampleForm.ControlInput1'
             >
-              <Form.Label>Название</Form.Label>
+              <Form.Label>Имя</Form.Label>
               <Form.Control
-                name={'name'}
+                name={'firstName'}
+                type='text'
+              />
+            </Form.Group>
+            <Form.Group
+              className='mb-3'
+              controlId='exampleForm.ControlInput2'
+            >
+              <Form.Label>Фамилия</Form.Label>
+              <Form.Control
+                name={'lastName'}
                 type='text'
               />
             </Form.Group>
@@ -58,7 +69,7 @@ export const CreateCollectionModal = () => {
               type={'submit'}
               variant='primary'
             >
-              Создать
+              Добавить
             </Button>
           </Form>
         </Modal.Body>

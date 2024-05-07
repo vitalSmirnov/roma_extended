@@ -1,5 +1,6 @@
 import { CreateBookModal } from '../../../features/BookModal'
 import { CreateCollectionModal } from '../../../features/CollectionModal'
+import { AuthorModal } from '../../../features/AuthorModal'
 
 export const Header = () => {
   return (
@@ -20,6 +21,9 @@ export const Header = () => {
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
           <CreateCollectionModal />
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+          <AuthorModal />
         </div>
       </div>
     </>

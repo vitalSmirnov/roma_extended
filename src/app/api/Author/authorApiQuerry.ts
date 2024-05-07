@@ -15,7 +15,7 @@ import {
 export const authorApi = createApi({
   reducerPath: 'authorApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://185.177.219.70:8080/api/authors', //здесь внести базовый url, к которому будут подставляться части из query/mutations ниже
+    baseUrl: 'http://185.177.219.70:8080/api/authors/', //здесь внести базовый url, к которому будут подставляться части из query/mutations ниже
     // условно базовый url https://google.com/, a путь в конкретном api (CreateCollection) - 'collection'.
     // В результате запрос будет направлен на https://google.com/collection
   }),
@@ -44,7 +44,7 @@ export const authorApi = createApi({
     }),
 
     CreateAuthor: builder.mutation<CreateAuthorResponse, CreateAuthorPayload>({
-      query: ({ body }) => ({
+      query: body => ({
         url: ``,
         method: 'POST',
         body: body,

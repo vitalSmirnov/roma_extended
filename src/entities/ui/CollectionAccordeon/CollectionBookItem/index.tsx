@@ -8,19 +8,24 @@ interface CollectionBookItem {
 
 export const CollectionBookInner = ({ id }: CollectionBookItem) => {
   const { data } = useGetCollectionBookListQuery({ id: id, page: 1, limit: 100 })
+
   return (
-    <ListGroup>
-      {data!.content.map(book => {
-        return (
-          <ListGroup.Item
-            key={book.id}
-            className={'d-flex justify-content-between'}
-          >
-            <span>{`${book.title} - ${book.publishingYear}`}</span>
-            <Link to={`book/${book.id}`}>{'Перейти на книгу'}</Link>
-          </ListGroup.Item>
-        )
-      })}
-    </ListGroup>
+    <>
+      {data && data.totalElements > 0 && (
+        <ListGroup>
+          {data!.content.map(book => {
+            return (
+              <ListGroup.Item
+                key={book.id}
+                className={'d-flex justify-content-between'}
+              >
+                <span>{`${book.title} - ${book.publishingYear}`}</span>
+                <Link to={`book/${book.id}`}>{'Перейти на книгу'}</Link>
+              </ListGroup.Item>
+            )
+          })}
+        </ListGroup>
+      )}
+    </>
   )
 }

@@ -20,9 +20,8 @@ export interface DeleteCollectionPayload {
 export interface DeleteCollectionResponse {}
 
 export interface GetCollectionListPayload {}
-export interface GetCollectionListResponse {
-  collections: ICollection[]
-}
+type CollectionArray = ICollection[]
+export interface GetCollectionListResponse extends CollectionArray {}
 
 export interface CreateCollectionPayload {
   name: string
@@ -38,4 +37,5 @@ export interface GetCollectionBookListPayload {
 }
 export interface GetCollectionBookListResponse {
   content: IBook[]
+  totalElements: number
 }

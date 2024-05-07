@@ -15,7 +15,7 @@ import {
 export const bookListApi = createApi({
   reducerPath: 'bookListApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://185.177.219.70:8080/api/books', //здесь внести базовый url, к которому будут подставляться части из query/mutations ниже
+    baseUrl: 'http://185.177.219.70:8080/api/books/', //здесь внести базовый url, к которому будут подставляться части из query/mutations ниже
     // условно базовый url https://google.com/, a путь в конкретном api (GetBook) - 'books/${...}'.
     // В результате запрос будет направлен на https://google.com/books/${...}
   }),
@@ -30,7 +30,7 @@ export const bookListApi = createApi({
 
     CreateBook: builder.mutation<CreateBookResponse, CreateBookPayload>({
       query: payload => ({
-        url: `books`,
+        url: ``,
         method: 'POST',
         body: payload,
       }),

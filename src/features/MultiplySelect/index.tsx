@@ -1,28 +1,36 @@
 import { Form } from 'react-bootstrap'
-import { useGetCollectionListQuery } from '../../app/api/Collection/CollectionApiQuerry.ts'
+import { GetCollectionListResponse } from '../../app/api/Collection/collectionApiDataSource.ts'
+import { GetListAuthorResponse } from '../../app/api/Author/authorApiDataSource.ts'
+import { ICollection } from '../../entities/types/ICollection.ts'
+import { IAuthor } from '../../entities/types/IAuthor.ts'
 
-interface MultiplySelectProps {
-  selectionCallback: (values: string[]) => void
+type DataType<T> = T extends GetListAuthorResponse ? GetListAuthorResponse : GetCollectionListResponse
+
+interface MultiplySelectProps<T> {
+  label: string
+  data: DataType<T>
+  name: string
 }
 
-export const MultiplySelect = ({ selectionCallback }: MultiplySelectProps) => {
-  const { data } = useGetCollectionListQuery({})
-
-  const onChangeItem = (e: string[]) => {
-    selectionCallback(e)
-  }
+export const MultiplySelect = <T,>({ label, data, name }: MultiplySelectProps<T>) => {
   return (
     <Form.Group controlId='collections'>
-      <Form.Label>Коллекции</Form.Label>
+      <Form.Label>{label}</Form.Label>
       <Form.Control
-        name={'collections'}
+        name={name}
         as='select'
         multiple
-        value={data!.collections[0].name}
-        onChange={e => onChangeItem([].slice.call(e.target.selectedOptions).map(item => item.value))}
       >
-        {data!.collections.map(item => {
-          return <option value={item.id}>{item.name}</option>
+        {data!.map(item => {
+          let name: string
+          if (item.hasOwnProperty('name')) {
+            const collection = item as ICollection
+            name = collection.name
+          } else {
+            const author = item as IAuthor
+            name = `${author.firstName} ${author.lastName}`
+          }
+          return <option value={item.id}>{name}</option>
         })}
       </Form.Control>
     </Form.Group>

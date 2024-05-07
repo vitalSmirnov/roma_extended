@@ -3,7 +3,3 @@ export interface IAuthor {
   firstName: string
   lastName: string
 }
-
-export interface IAuthored {
-  authors: IAuthor[]
-}
