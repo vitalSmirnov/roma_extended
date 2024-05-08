@@ -1,11 +1,13 @@
 import { IBook } from '../../../entities/types/IBook.ts'
+import { INumbered, IPaged, IPagination } from '../../../entities/types/helpers.ts'
 
 export interface GetBookListPayload {
   page: number
   limit: number
 }
-export interface GetBookListResponse {
+export interface GetBookListResponse extends IPagination, INumbered {
   content: IBook[]
+  pageable: IPaged
 }
 
 export interface GetBookPayload {
@@ -19,7 +21,7 @@ export interface CreateBookPayload {
   partsQuantity: string
   publicationPlace: string
   publishingHouse: string
-  publishingYear: 0
+  publishingYear: number
   language: string
   subjects: string
   publicationType: string

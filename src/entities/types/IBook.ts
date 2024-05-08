@@ -21,9 +21,3 @@ export interface IBook {
   bcode: number
   authors: IAuthor[]
 }
-
-export interface BookCollection {
-  id: string
-  title: string
-  publishingYear: number
-}

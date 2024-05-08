@@ -1,10 +1,11 @@
 import { Modal, Button, Form } from 'react-bootstrap'
-import { FormEvent, useState } from 'react'
+import { useState } from 'react'
 import { MultiplySelect } from '../MultiplySelect'
 import { useCreateBookMutation } from '../../app/api/Books/bookApiQuerry.ts'
 import { CreateBookPayload } from '../../app/api/Books/bookApiDataSource.ts'
 import { useGetListAuthorsQuery } from '../../app/api/Author/authorApiQuerry.ts'
 import { useGetCollectionListQuery } from '../../app/api/Collection/CollectionApiQuerry.ts'
+import { Formik } from 'formik'
 
 export const CreateBookModal = () => {
   const [createBook] = useCreateBookMutation()
@@ -13,15 +14,14 @@ export const CreateBookModal = () => {
 
   const [show, setShow] = useState(false)
 
-  const [inputField, setInputField] = useState<CreateBookPayload>({
-    collectionsId: [],
+  const inititalValue: CreateBookPayload = {
     title: '',
     inventoryNumber: '',
     description: '',
     partsQuantity: '',
     publicationPlace: '',
     publishingHouse: '',
-    publishingYear: 0,
+    publishingYear: 2024,
     language: '',
     subjects: '',
     publicationType: '',
@@ -31,20 +31,14 @@ export const CreateBookModal = () => {
     stamp: '',
     label: '',
     binding: '',
+    collectionsId: [],
     authorsId: [],
     bcode: 0,
-  })
-
-  const payloadHandler = (e: FormEvent<HTMLFormElement>) => {
-    // @ts-ignore
-    setInputField({ ...inputField, [e.target.name]: e.target.value })
   }
 
   // функция ниже запускается когда на странице происходит submit event
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault() // предотвращает предустановленный эффект от эвента в данном случае спасает от вызова Post запроса и перезагрузки страницы
-    e.stopPropagation() // аналогично выше
-    createBook({ ...inputField }).then(() => {
+  const sendRequest = (e: CreateBookPayload) => {
+    createBook(e).then(() => {
       handleClose()
     })
   }
@@ -70,76 +64,105 @@ export const CreateBookModal = () => {
         </Modal.Header>
 
         <Modal.Body>
-          <Form
-            onSubmit={handleSubmit}
-            onChange={payloadHandler}
+          <Formik
+            initialValues={inititalValue}
+            onSubmit={sendRequest}
           >
-            <Form.Group
-              className='mb-3'
-              controlId='createBookForm.inventoryNumber'
-            >
-              <Form.Label>Номер инвентаризации</Form.Label>
-              <Form.Control
-                required
-                name={'inventoryNumber'}
-                type='number'
-                placeholder='0'
-              />
-            </Form.Group>
-            <Form.Group
-              className='mb-3'
-              controlId='createBookForm.bCode'
-            >
-              <Form.Label>Код</Form.Label>
-              <Form.Control
-                required
-                name={'bcode'}
-                type='number'
-                placeholder='0'
-              />
-            </Form.Group>
-            <Form.Group
-              className='mb-3'
-              controlId='createBookForm.title'
-            >
-              <Form.Label>Заголовок</Form.Label>
-              <Form.Control
-                required
-                name={'title'}
-                type='text'
-              />
-            </Form.Group>
+            {({ handleSubmit, handleChange, values }) => (
+              <Form onSubmit={handleSubmit}>
+                <Form.Group
+                  className='mb-3'
+                  controlId='createBookForm.inventoryNumber'
+                >
+                  <Form.Label>Номер инвентаризации</Form.Label>
+                  <Form.Control
+                    required
+                    onChange={handleChange}
+                    name={'inventoryNumber'}
+                    value={values.inventoryNumber}
+                    type='number'
+                    placeholder='0'
+                  />
+                </Form.Group>
+                <Form.Group
+                  className='mb-3'
+                  controlId='createBookForm.bCode'
+                >
+                  <Form.Label>Код</Form.Label>
+                  <Form.Control
+                    required
+                    onChange={handleChange}
+                    name={'bcode'}
+                    type='number'
+                    placeholder='0'
+                    value={values.bcode}
+                  />
+                </Form.Group>
+                <Form.Group
+                  className='mb-3'
+                  controlId='createBookForm.title'
+                >
+                  <Form.Label>Заголовок</Form.Label>
+                  <Form.Control
+                    required
+                    onChange={handleChange}
+                    name={'title'}
+                    type='text'
+                    value={values.title}
+                  />
+                </Form.Group>
 
-            <Form.Group
-              className='mb-3'
-              controlId='createBookForm.description'
-            >
-              <Form.Label>Описание</Form.Label>
-              <Form.Control
-                required
-                name={'description'}
-                type='text'
-              />
-            </Form.Group>
-            <MultiplySelect
-              data={collectionsData.data!}
-              label={'Коллекции'}
-              name={'collectionsId'}
-            />
-            <MultiplySelect
-              //@ts-ignore
-              data={authorsData.data!}
-              label={'Автор'}
-              name={'authorsId'}
-            />
-            <Button
-              // инициатор submit event
-              type={'submit'}
-              variant='primary'
-            >
-              Создать
-            </Button>
-          </Form>
+                <Form.Group
+                  className='mb-3'
+                  controlId='createBookForm.bCode'
+                >
+                  <Form.Label>Год издания</Form.Label>
+                  <Form.Control
+                    required
+                    onChange={handleChange}
+                    name={'publishingYear'}
+                    type='number'
+                    value={values.publishingYear}
+                  />
+                </Form.Group>
+                <Form.Group
+                  className='mb-3'
+                  controlId='createBookForm.description'
+                >
+                  <Form.Label>Описание</Form.Label>
+                  <Form.Control
+                    onChange={handleChange}
+                    required
+                    name={'description'}
+                    type='text'
+                    value={values.description}
+                  />
+                </Form.Group>
+                <MultiplySelect
+                  onChange={handleChange}
+                  data={collectionsData.data!}
+                  value={values.collectionsId}
+                  label={'Коллекции'}
+                  name={'collectionsId'}
+                />
+                <MultiplySelect
+                  onChange={handleChange}
+                  //@ts-ignore
+                  data={authorsData.data!}
+                  value={values.authorsId}
+                  label={'Автор'}
+                  name={'authorsId'}
+                />
+                <Button
+                  // инициатор submit event
+                  type={'submit'}
+                  variant='primary'
+                >
+                  Создать
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </Modal.Body>
       </Modal>
     </>

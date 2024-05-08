@@ -7,7 +7,7 @@ interface CollectionBookItem {
 }
 
 export const CollectionBookInner = ({ id }: CollectionBookItem) => {
-  const { data } = useGetCollectionBookListQuery({ id: id, page: 1, limit: 100 })
+  const { data } = useGetCollectionBookListQuery({ id: id, page: 0, limit: 100 })
 
   return (
     <>

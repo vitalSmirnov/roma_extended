@@ -10,16 +10,20 @@ interface MultiplySelectProps<T> {
   label: string
   data: DataType<T>
   name: string
+  onChange: (e: any) => void
+  value: string[]
 }
 
-export const MultiplySelect = <T,>({ label, data, name }: MultiplySelectProps<T>) => {
+export const MultiplySelect = <T,>({ label, onChange, data, name, value }: MultiplySelectProps<T>) => {
   return (
     <Form.Group controlId='collections'>
       <Form.Label>{label}</Form.Label>
       <Form.Control
         name={name}
         as='select'
+        value={value}
         multiple
+        onChange={onChange}
       >
         {data!.map(item => {
           let name: string
