@@ -51,6 +51,7 @@ export const AuthorModal = () => {
             >
               <Form.Label>Имя</Form.Label>
               <Form.Control
+                required
                 name={'firstName'}
                 type='text'
               />
@@ -61,6 +62,7 @@ export const AuthorModal = () => {
             >
               <Form.Label>Фамилия</Form.Label>
               <Form.Control
+                required
                 name={'lastName'}
                 type='text'
               />
